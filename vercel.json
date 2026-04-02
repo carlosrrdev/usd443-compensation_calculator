@@ -1,0 +1,17 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors https://usd443.org https://*.usd443.org"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "ALLOW-FROM https://usd443.org"
+        }
+      ]
+    }
+  ]
+}
