@@ -343,6 +343,74 @@
     border-top: 1px solid var(--mid);
     margin: 20px 0;
   }
+
+  .stipend-breakdown {
+    border-top: 1px solid var(--mid);
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+
+  .stipend-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 4px 0;
+    color: var(--muted);
+  }
+
+  .stipend-line.total {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 14px;
+    border-top: 1px dashed var(--mid);
+    margin-top: 6px;
+    padding-top: 8px;
+  }
+
+  .stipend-line .s-val {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+  }
+
+  .stipend-line .s-val.green { color: var(--green); }
+
+  .onetime-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #FFF8EC;
+    border: 1.5px solid #E8A020;
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-top: 14px;
+  }
+
+  .onetime-icon {
+    width: 20px; height: 20px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .onetime-text {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #7A5010;
+  }
+
+  .onetime-text strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #5A3A08;
+    margin-bottom: 2px;
+  }
 </style>
 </head>
 <body>
@@ -388,6 +456,24 @@
       <div class="select-wrap">
         <select id="cert-step" onchange="calcCertified()">
           <option value="">— Select —</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>ESOL Stipend</label>
+      <div class="select-wrap">
+        <select id="cert-esol" onchange="calcCertified()">
+          <option value="no">No</option>
+          <option value="yes">Yes (+$1,000/yr)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Sign-on Bonus (new hires only)</label>
+      <div class="select-wrap">
+        <select id="cert-signon" onchange="calcCertified()">
+          <option value="no">No</option>
+          <option value="yes">Yes (+$1,000 one-time)</option>
         </select>
       </div>
     </div>
@@ -598,6 +684,8 @@ for (let i = 0; i <= 32; i++) {
 function calcCertified() {
   const edu = document.getElementById('cert-edu').value;
   const step = document.getElementById('cert-step').value;
+  const esol = document.getElementById('cert-esol').value;
+  const signon = document.getElementById('cert-signon').value;
   const el = document.getElementById('cert-result');
 
   if (!edu || step === '') {
@@ -605,15 +693,48 @@ function calcCertified() {
     return;
   }
 
-  const salary = CERTIFIED[edu][parseInt(step)];
-  const monthly = salary / 12;
-  const biweekly = salary / 26;
+  const baseSalary = CERTIFIED[edu][parseInt(step)];
+  const esolAmount = esol === 'yes' ? 1000 : 0;
+  const signonAmount = signon === 'yes' ? 1000 : 0;
+  const recurringTotal = baseSalary + esolAmount;
+  const firstYearTotal = recurringTotal + signonAmount;
+  const monthly = recurringTotal / 12;
+  const biweekly = recurringTotal / 26;
+
+  const hasStipends = esolAmount > 0 || signonAmount > 0;
+
+  const breakdownHTML = hasStipends ? `
+    <div class="stipend-breakdown">
+      <div class="stipend-line">
+        <span>Base salary (${edu}, Step ${step})</span>
+        <span class="s-val">${fmt(baseSalary)}</span>
+      </div>
+      ${esolAmount > 0 ? `<div class="stipend-line">
+        <span>ESOL stipend (annual, recurring)</span>
+        <span class="s-val green">+${fmt(esolAmount)}</span>
+      </div>` : ''}
+      <div class="stipend-line total">
+        <span>Recurring annual total</span>
+        <span class="s-val">${fmt(recurringTotal)}</span>
+      </div>
+    </div>
+  ` : '';
+
+  const signonBannerHTML = signonAmount > 0 ? `
+    <div class="onetime-banner">
+      <div class="onetime-icon">!</div>
+      <div class="onetime-text">
+        <strong>First year only: ${fmt(firstYearTotal)} total</strong>
+        Includes a one-time $1,000 sign-on bonus paid in year 1 only. Your recurring annual salary after the first year will be ${fmt(recurringTotal)}.
+      </div>
+    </div>
+  ` : '';
 
   el.innerHTML = `
     <div class="result-main">
-      <span class="result-label">Annual Salary</span>
+      <span class="result-label">Recurring Annual Salary</span>
     </div>
-    <div class="result-amount">${fmt(salary)}</div>
+    <div class="result-amount">${fmt(recurringTotal)}</div>
     <div class="result-details" style="margin-top:14px">
       <div class="detail-item">
         <div class="d-label">Monthly</div>
@@ -628,6 +749,8 @@ function calcCertified() {
         <div class="d-value">${edu} / ${step}</div>
       </div>
     </div>
+    ${breakdownHTML}
+    ${signonBannerHTML}
   `;
 }
 
