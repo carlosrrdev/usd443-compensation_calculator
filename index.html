@@ -411,6 +411,105 @@
     color: #5A3A08;
     margin-bottom: 2px;
   }
+
+  .ins-wrap {
+    margin-top: 20px;
+    border-top: 2px dashed var(--mid);
+    padding-top: 18px;
+  }
+
+  .ins-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .ins-header .section-label { margin: 0; }
+
+  .ins-opt-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: var(--mid);
+    color: var(--muted);
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  .ins-result-card {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-top: 14px;
+    color: var(--white);
+  }
+
+  .ins-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 540px) {
+    .ins-metrics { grid-template-columns: 1fr 1fr; }
+  }
+
+  .ins-metric {
+    background: rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .ins-metric .im-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+
+  .ins-metric .im-val {
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    color: var(--white);
+  }
+
+  .ins-metric .im-val.accent { color: var(--accent); }
+  .ins-metric .im-val.greenish { color: #5DE0A0; }
+
+  .ins-takehome {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ins-takehome .th-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .ins-takehome .th-val {
+    font-size: 22px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    color: #5DE0A0;
+    letter-spacing: -0.5px;
+  }
+
+  .ins-takehome .th-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 2px;
+  }
 </style>
 </head>
 <body>
@@ -473,7 +572,7 @@
       <div class="select-wrap">
         <select id="cert-signon" onchange="calcCertified()">
           <option value="no">No</option>
-          <option value="yes">Yes (+$1,000 one-time)</option>
+          <option value="yes">Yes (+$1,500 one-time)</option>
         </select>
       </div>
     </div>
@@ -484,6 +583,42 @@
   </div>
 
   <p class="info-note">Certified schedule covers licensed/credentialed positions (teachers, counselors, specialists). Steps represent years of experience. Some columns cap before step 30.</p>
+
+  <div class="ins-wrap" id="cert-ins-wrap" style="display:none">
+    <div class="ins-header">
+      <p class="section-label">Insurance Estimate</p>
+      <span class="ins-opt-badge">Optional</span>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Plan</label>
+        <div class="select-wrap">
+          <select id="cert-ins-plan" onchange="onInsPlanChange('cert'); calcInsurance('cert')">
+            <option value="">None / Skip</option>
+            <option value="3">Plan 3 — Medical, Dental &amp; Vision</option>
+            <option value="2">Plan 2 — Medical, Dental &amp; Vision</option>
+            <option value="1">Plan 1 — Medical, Dental &amp; Vision</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="cert-ins-tier-wrap" style="display:none">
+        <label>Coverage Tier</label>
+        <div class="select-wrap">
+          <select id="cert-ins-tier" onchange="calcInsurance('cert')"></select>
+        </div>
+      </div>
+      <div class="field" id="cert-ins-sched-wrap" style="display:none">
+        <label>Pay Schedule</label>
+        <div class="select-wrap">
+          <select id="cert-ins-sched" onchange="calcInsurance('cert')">
+            <option value="12">12-Month deductions</option>
+            <option value="9">9-Month deductions</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="cert-ins-result"></div>
+  </div>
 </div>
 
 <!-- CLASSIFIED PANEL -->
@@ -537,6 +672,42 @@
   </div>
 
   <p class="info-note">Classified schedule shows hourly rates. Use the hours/weeks inputs above to estimate annualized earnings based on your work schedule.</p>
+
+  <div class="ins-wrap" id="cls-ins-wrap" style="display:none">
+    <div class="ins-header">
+      <p class="section-label">Insurance Estimate</p>
+      <span class="ins-opt-badge">Optional</span>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Plan</label>
+        <div class="select-wrap">
+          <select id="cls-ins-plan" onchange="onInsPlanChange('cls'); calcInsurance('cls')">
+            <option value="">None / Skip</option>
+            <option value="3">Plan 3 — Medical, Dental &amp; Vision</option>
+            <option value="2">Plan 2 — Medical, Dental &amp; Vision</option>
+            <option value="1">Plan 1 — Medical, Dental &amp; Vision</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="cls-ins-tier-wrap" style="display:none">
+        <label>Coverage Tier</label>
+        <div class="select-wrap">
+          <select id="cls-ins-tier" onchange="calcInsurance('cls')"></select>
+        </div>
+      </div>
+      <div class="field" id="cls-ins-sched-wrap" style="display:none">
+        <label>Pay Schedule</label>
+        <div class="select-wrap">
+          <select id="cls-ins-sched" onchange="calcInsurance('cls')">
+            <option value="12">12-Month deductions</option>
+            <option value="9">9-Month deductions</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="cls-ins-result"></div>
+  </div>
 </div>
 
 <!-- MISC PANEL -->
@@ -690,12 +861,13 @@ function calcCertified() {
 
   if (!edu || step === '') {
     el.innerHTML = '<div class="result-empty">Select education level and step to see salary.</div>';
+    document.getElementById('cert-ins-wrap').style.display = 'none';
     return;
   }
 
   const baseSalary = CERTIFIED[edu][parseInt(step)];
   const esolAmount = esol === 'yes' ? 1000 : 0;
-  const signonAmount = signon === 'yes' ? 1000 : 0;
+  const signonAmount = signon === 'yes' ? 1500 : 0;
   const recurringTotal = baseSalary + esolAmount;
   const firstYearTotal = recurringTotal + signonAmount;
   const monthly = recurringTotal / 12;
@@ -725,10 +897,12 @@ function calcCertified() {
       <div class="onetime-icon">!</div>
       <div class="onetime-text">
         <strong>First year only: ${fmt(firstYearTotal)} total</strong>
-        Includes a one-time $1,000 sign-on bonus paid in year 1 only. Your recurring annual salary after the first year will be ${fmt(recurringTotal)}.
+        Includes a one-time $1,500 sign-on bonus paid in year 1 only. Your recurring annual salary after the first year will be ${fmt(recurringTotal)}.
       </div>
     </div>
   ` : '';
+
+  document.getElementById('cert-ins-wrap').style.display = 'block';
 
   el.innerHTML = `
     <div class="result-main">
@@ -763,6 +937,7 @@ function calcClassified() {
   if (!grade || step === '') {
     el.innerHTML = '<div class="result-empty">Select a job grade and step to see hourly rate.</div>';
     hoursRow.style.display = 'none';
+    document.getElementById('cls-ins-wrap').style.display = 'none';
     return;
   }
 
@@ -772,6 +947,7 @@ function calcClassified() {
   const annual = rate * hours * weeks;
 
   hoursRow.style.display = 'flex';
+  document.getElementById('cls-ins-wrap').style.display = 'block';
 
   el.innerHTML = `
     <div class="result-main">
@@ -824,6 +1000,137 @@ function calcSub() {
         <div class="d-label">Total</div>
         <div class="d-value green">${fmt(total)}</div>
       </div>
+    </div>
+  `;
+}
+
+const INSURANCE = {
+  "3": {
+    tiers: [
+      { label: "Employee Only",                    mo12: 0.00,    mo9: 0.00,    cost: 655.75,   district: 655.75 },
+      { label: "Employee + Spouse",                mo12: 385.05,  mo9: 513.40,  cost: 1040.80,  district: 655.75 },
+      { label: "Employee + Children",              mo12: 294.01,  mo9: 392.01,  cost: 949.76,   district: 655.75 },
+      { label: "Family",                           mo12: 474.75,  mo9: 633.00,  cost: 1130.50,  district: 655.75 },
+      { label: "Employee + Spouse (Both USD 443 employees)", mo12: 0.00, mo9: 0.00, cost: 1311.50, district: 1311.50 },
+      { label: "Family (Both USD 443 employees)",  mo12: 0.00,    mo9: 0.00,    cost: 1311.50,  district: 1311.50 },
+    ]
+  },
+  "2": {
+    tiers: [
+      { label: "Employee Only",      mo12: 182.25,  mo9: 243.00,   cost: 838.00,   district: 655.75 },
+      { label: "Employee + Spouse",  mo12: 751.05,  mo9: 1001.40,  cost: 1406.80,  district: 655.75 },
+      { label: "Employee + Children",mo12: 623.96,  mo9: 831.95,   cost: 1279.71,  district: 655.75 },
+      { label: "Family",             mo12: 1152.75, mo9: 1537.00,  cost: 1808.50,  district: 655.75 },
+    ]
+  },
+  "1": {
+    tiers: [
+      { label: "Employee Only",      mo12: 547.25,  mo9: 729.67,   cost: 1203.00,  district: 655.75 },
+      { label: "Employee + Spouse",  mo12: 1482.05, mo9: 1976.07,  cost: 2137.80,  district: 655.75 },
+      { label: "Employee + Children",mo12: 1283.96, mo9: 1711.95,  cost: 1939.71,  district: 655.75 },
+      { label: "Family",             mo12: 2083.75, mo9: 2778.33,  cost: 2739.50,  district: 655.75 },
+    ]
+  }
+};
+
+function onInsPlanChange(prefix) {
+  const plan = document.getElementById(prefix + '-ins-plan').value;
+  const tierWrap = document.getElementById(prefix + '-ins-tier-wrap');
+  const schedWrap = document.getElementById(prefix + '-ins-sched-wrap');
+  const tierSel = document.getElementById(prefix + '-ins-tier');
+  const resultEl = document.getElementById(prefix + '-ins-result');
+
+  tierSel.innerHTML = '';
+  resultEl.innerHTML = '';
+
+  if (!plan) {
+    tierWrap.style.display = 'none';
+    schedWrap.style.display = 'none';
+    return;
+  }
+
+  INSURANCE[plan].tiers.forEach((t, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = t.label;
+    tierSel.appendChild(o);
+  });
+
+  tierWrap.style.display = 'block';
+  schedWrap.style.display = 'block';
+}
+
+function calcInsurance(prefix) {
+  const plan = document.getElementById(prefix + '-ins-plan').value;
+  const tierIdx = document.getElementById(prefix + '-ins-tier').value;
+  const sched = document.getElementById(prefix + '-ins-sched').value;
+  const resultEl = document.getElementById(prefix + '-ins-result');
+
+  if (!plan || tierIdx === '') { resultEl.innerHTML = ''; return; }
+
+  const tier = INSURANCE[plan].tiers[parseInt(tierIdx)];
+  const monthlyPremium = sched === '9' ? tier.mo9 : tier.mo12;
+  const annualPremium = monthlyPremium * (sched === '9' ? 9 : 12);
+
+  let monthlyGross = 0;
+  if (prefix === 'cert') {
+    const edu = document.getElementById('cert-edu').value;
+    const step = document.getElementById('cert-step').value;
+    const esol = document.getElementById('cert-esol').value;
+    if (edu && step !== '') {
+      const base = CERTIFIED[edu][parseInt(step)];
+      const esolAmt = esol === 'yes' ? 1000 : 0;
+      monthlyGross = (base + esolAmt) / 12;
+    }
+  } else {
+    const grade = document.getElementById('cls-grade').value;
+    const step = document.getElementById('cls-step').value;
+    const hours = parseFloat(document.getElementById('cls-hours').value) || 40;
+    const weeks = parseFloat(document.getElementById('cls-weeks').value) || 52;
+    if (grade && step !== '') {
+      monthlyGross = (CLASSIFIED[grade][parseInt(step)] * hours * weeks) / 12;
+    }
+  }
+
+  const monthlyTakehome = monthlyGross > 0 ? monthlyGross - monthlyPremium : null;
+  const schedLabel = sched === '9' ? '9-month pay schedule' : '12-month pay schedule';
+
+  resultEl.innerHTML = `
+    <div class="ins-result-card">
+      <div class="ins-metrics">
+        <div class="ins-metric">
+          <div class="im-label">Your monthly premium</div>
+          <div class="im-val accent">${monthlyPremium === 0 ? '$0.00' : fmt(monthlyPremium) + '/mo'}</div>
+        </div>
+        <div class="ins-metric">
+          <div class="im-label">Annual employee cost</div>
+          <div class="im-val">${fmt(annualPremium)}/yr</div>
+        </div>
+        <div class="ins-metric">
+          <div class="im-label">District contributes</div>
+          <div class="im-val">${fmt(tier.district)}/mo</div>
+        </div>
+        <div class="ins-metric">
+          <div class="im-label">Total plan cost</div>
+          <div class="im-val">${fmt(tier.cost)}/mo</div>
+        </div>
+        <div class="ins-metric">
+          <div class="im-label">Plan</div>
+          <div class="im-val">Plan ${plan}</div>
+        </div>
+        <div class="ins-metric">
+          <div class="im-label">Tier</div>
+          <div class="im-val" style="font-size:12px;line-height:1.3">${tier.label}</div>
+        </div>
+      </div>
+      ${monthlyTakehome !== null ? `
+      <div class="ins-takehome">
+        <div>
+          <div class="th-label">Est. monthly take-home after insurance</div>
+          <div class="th-sub">${schedLabel} — before taxes</div>
+        </div>
+        <div class="th-val">${fmt(monthlyTakehome)}/mo</div>
+      </div>` : ''}
     </div>
   `;
 }
