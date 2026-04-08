@@ -558,22 +558,28 @@
         </select>
       </div>
     </div>
-    <div class="field">
-      <label>ESOL Stipend</label>
-      <div class="select-wrap">
-        <select id="cert-esol" onchange="calcCertified()">
-          <option value="no">No</option>
-          <option value="yes">Yes (+$1,000/yr)</option>
-        </select>
+  </div>
+
+  <div style="background:var(--light); border:1.5px solid var(--mid); border-radius:var(--radius); padding:14px 16px; margin-bottom:20px;">
+    <p style="font-size:11px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:var(--muted); margin-bottom:12px;">Additional Compensation</p>
+    <div class="form-grid" style="margin-bottom:0">
+      <div class="field">
+        <label>ESOL Stipend</label>
+        <div class="select-wrap">
+          <select id="cert-esol" onchange="calcCertified()">
+            <option value="no">No</option>
+            <option value="yes">Yes (+$1,000/yr)</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="field">
-      <label>Sign-on Bonus (new hires only)</label>
-      <div class="select-wrap">
-        <select id="cert-signon" onchange="calcCertified()">
-          <option value="no">No</option>
-          <option value="yes">Yes (+$1,500 one-time)</option>
-        </select>
+      <div class="field">
+        <label>Sign-on Bonus (new hires only)</label>
+        <div class="select-wrap">
+          <select id="cert-signon" onchange="calcCertified()">
+            <option value="no">No</option>
+            <option value="yes">Yes (+$1,500 one-time)</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
@@ -915,10 +921,6 @@ function calcCertified() {
         <div class="d-value blue">${fmt(monthly)}</div>
       </div>
       <div class="detail-item">
-        <div class="d-label">Bi-weekly</div>
-        <div class="d-value blue">${fmt(biweekly)}</div>
-      </div>
-      <div class="detail-item">
         <div class="d-label">Column / Step</div>
         <div class="d-value">${edu} / ${step}</div>
       </div>
@@ -1108,11 +1110,11 @@ function calcInsurance(prefix) {
         </div>
         <div class="ins-metric">
           <div class="im-label">District contributes</div>
-          <div class="im-val">${fmt(tier.district)}/mo</div>
+          <div class="im-val">$${tier.district.toFixed(2)}/mo</div>
         </div>
         <div class="ins-metric">
           <div class="im-label">Total plan cost</div>
-          <div class="im-val">${fmt(tier.cost)}/mo</div>
+          <div class="im-val">$${tier.cost.toFixed(2)}/mo</div>
         </div>
         <div class="ins-metric">
           <div class="im-label">Plan</div>
