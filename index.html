@@ -939,12 +939,16 @@ function calcCertified() {
     <div class="result-amount">${fmt(recurringTotal)}</div>
     <div class="result-details" style="margin-top:14px">
       <div class="detail-item">
-        <div class="d-label">Monthly</div>
+        <div class="d-label">Monthly (gross)</div>
         <div class="d-value blue">${fmt(monthly)}</div>
       </div>
       <div class="detail-item">
         <div class="d-label">KPERS (6%/mo)</div>
         <div class="d-value" style="color:var(--red)">-${fmt(kpers)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="d-label">Monthly after KPERS</div>
+        <div class="d-value green">${fmt(monthly - kpers)}</div>
       </div>
       <div class="detail-item">
         <div class="d-label">Column / Step</div>
@@ -990,12 +994,16 @@ function calcClassified() {
         <div class="d-value green">${fmt(annual)}</div>
       </div>
       <div class="detail-item">
-        <div class="d-label">Est. Monthly</div>
+        <div class="d-label">Est. Monthly (gross)</div>
         <div class="d-value blue">${fmt(clsMonthly)}</div>
       </div>
       <div class="detail-item">
         <div class="d-label">KPERS (6%/mo)</div>
         <div class="d-value" style="color:var(--red)">-${fmt(clsKpers)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="d-label">Monthly after KPERS</div>
+        <div class="d-value green">${fmt(clsMonthly - clsKpers)}</div>
       </div>
       <div class="detail-item">
         <div class="d-label">Grade / Step</div>
@@ -1040,6 +1048,10 @@ function calcSub() {
       ${isLTSToR ? `<div class="detail-item">
         <div class="d-label">KPERS (6%)</div>
         <div class="d-value" style="color:var(--red)">-${fmt(subKpers)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="d-label">Total after KPERS</div>
+        <div class="d-value green">${fmt(total - subKpers)}</div>
       </div>` : ''}
     </div>
     ${isLTSToR ? '<p style="font-size:12px;color:var(--muted);margin-top:10px;">KPERS applies to LTS – Teacher of Record assignments only.</p>' : ''}
@@ -1179,7 +1191,7 @@ function calcInsurance(prefix) {
 </script>
 <div class="disclaimer">
   <strong>Disclaimer</strong>
-  This compensation calculator is intended to provide a rough estimate of an employee's paycheck and should not be considered an exact amount. Actual pay may vary based on individual tax elections (K-4 and W-4), applicable federal and state taxes, Medicare, Social Security, unemployment, and other required deductions.
+  This Compensation Calculator is intended to provide a rough estimate of an employee's paycheck and should not be considered an exact amount. Actual pay may vary based on individual tax elections (K-4 and W-4), applicable federal and state taxes, Medicare, Social Security, unemployment, and other required deductions.
   <br><br>
   Please note that participation in Section 125 plans and any changes from employee-only (Group 3) coverage may result in additional out-of-pocket expenses that are not fully reflected in this estimate.
 </div>
