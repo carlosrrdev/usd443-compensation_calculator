@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>USD 443 Compensation Calculator 2025–26</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -24,7 +24,7 @@
   }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background: var(--light);
     color: var(--text);
     min-height: 100vh;
@@ -90,7 +90,7 @@
     border: none;
     border-bottom: 3px solid transparent;
     color: rgba(255,255,255,0.5);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -148,7 +148,7 @@
     background: var(--white);
     border: 1.5px solid var(--mid);
     border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 14px;
     color: var(--text);
     appearance: none;
@@ -509,6 +509,28 @@
     font-size: 11px;
     color: rgba(255,255,255,0.4);
     margin-top: 2px;
+  }
+  .disclaimer {
+    background: var(--white);
+    border-top: 2px solid var(--mid);
+    padding: 18px 28px;
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .disclaimer strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 540px) {
+    .disclaimer { padding: 16px; }
   }
 </style>
 </head>
@@ -877,7 +899,7 @@ function calcCertified() {
   const recurringTotal = baseSalary + esolAmount;
   const firstYearTotal = recurringTotal + signonAmount;
   const monthly = recurringTotal / 12;
-  const biweekly = recurringTotal / 26;
+  const kpers = monthly * 0.06;
 
   const hasStipends = esolAmount > 0 || signonAmount > 0;
 
@@ -921,6 +943,10 @@ function calcCertified() {
         <div class="d-value blue">${fmt(monthly)}</div>
       </div>
       <div class="detail-item">
+        <div class="d-label">KPERS (6%/mo)</div>
+        <div class="d-value" style="color:var(--red)">-${fmt(kpers)}</div>
+      </div>
+      <div class="detail-item">
         <div class="d-label">Column / Step</div>
         <div class="d-value">${edu} / ${step}</div>
       </div>
@@ -947,6 +973,8 @@ function calcClassified() {
   const hours = parseFloat(document.getElementById('cls-hours').value) || 40;
   const weeks = parseFloat(document.getElementById('cls-weeks').value) || 52;
   const annual = rate * hours * weeks;
+  const clsMonthly = annual / 12;
+  const clsKpers = clsMonthly * 0.06;
 
   hoursRow.style.display = 'flex';
   document.getElementById('cls-ins-wrap').style.display = 'block';
@@ -963,7 +991,11 @@ function calcClassified() {
       </div>
       <div class="detail-item">
         <div class="d-label">Est. Monthly</div>
-        <div class="d-value blue">${fmt(annual/12)}</div>
+        <div class="d-value blue">${fmt(clsMonthly)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="d-label">KPERS (6%/mo)</div>
+        <div class="d-value" style="color:var(--red)">-${fmt(clsKpers)}</div>
       </div>
       <div class="detail-item">
         <div class="d-label">Grade / Step</div>
@@ -984,6 +1016,9 @@ function calcSub() {
   }
 
   const total = rate * days;
+  const isLTSToR = rate === 225;
+  const subKpers = isLTSToR ? total * 0.06 : 0;
+
   el.innerHTML = `
     <div class="result-main">
       <span class="result-label">Estimated Earnings</span>
@@ -1002,7 +1037,12 @@ function calcSub() {
         <div class="d-label">Total</div>
         <div class="d-value green">${fmt(total)}</div>
       </div>
+      ${isLTSToR ? `<div class="detail-item">
+        <div class="d-label">KPERS (6%)</div>
+        <div class="d-value" style="color:var(--red)">-${fmt(subKpers)}</div>
+      </div>` : ''}
     </div>
+    ${isLTSToR ? '<p style="font-size:12px;color:var(--muted);margin-top:10px;">KPERS applies to LTS – Teacher of Record assignments only.</p>' : ''}
   `;
 }
 
@@ -1137,5 +1177,11 @@ function calcInsurance(prefix) {
   `;
 }
 </script>
+<div class="disclaimer">
+  <strong>Disclaimer</strong>
+  This compensation calculator is intended to provide a rough estimate of an employee's paycheck and should not be considered an exact amount. Actual pay may vary based on individual tax elections (K-4 and W-4), applicable federal and state taxes, Medicare, Social Security, unemployment, and other required deductions.
+  <br><br>
+  Please note that participation in Section 125 plans and any changes from employee-only (Group 3) coverage may result in additional out-of-pocket expenses that are not fully reflected in this estimate.
+</div>
 </body>
 </html>
